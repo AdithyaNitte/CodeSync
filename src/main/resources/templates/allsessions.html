@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>All Sessions and Files</title>
+    <style>
+        /* Global & Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f9; /* Light, modern background */
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Main Heading */
+        h1 {
+            color: #007bff; /* Primary blue color */
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 10px;
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Session Heading */
+        h2 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            color: #495057;
+            padding: 10px 0;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        h2 b {
+            color: #28a745; /* Highlight session code in green */
+            font-weight: 700;
+        }
+
+        /* Table Styling */
+        table {
+            border-collapse: separate; /* Use separate for rounded corners */
+            border-spacing: 0;
+            width: 100%;
+            max-width: 900px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+            background-color: #ffffff;
+            border-radius: 8px; /* Rounded corners for the entire table */
+            overflow: hidden; /* Important for applying border-radius to inner elements */
+        }
+
+        /* Table Headers */
+        th {
+            border: none;
+            padding: 12px 15px;
+            text-align: left;
+            background-color: #007bff; /* Primary blue header background */
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Table Data Cells */
+        td {
+            border: none;
+            border-bottom: 1px solid #eee; /* Light separator line */
+            padding: 12px 15px;
+            color: #555;
+            font-size: 0.95em;
+            background-color: #fff;
+        }
+
+        /* Zebra Stripping (Alternate row color) */
+        tbody tr:nth-child(even) td {
+            background-color: #f8f9fa; /* Very light gray for even rows */
+        }
+
+        /* Hover Effect on Rows */
+        tbody tr:hover td {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Delete Button Styling */
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545; /* Red for destructive action */
+            color: white;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.1s;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        button:hover {
+            background-color: #c82333;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* No Sessions Message */
+        div[th:if="${sessions == null or #lists.isEmpty(sessions)}"] p {
+            padding: 30px;
+            border: 2px dashed #ffc107;
+            border-radius: 8px;
+            background-color: #fff3cd;
+            color: #856404;
+            font-size: 1.2em;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+<h1>All Sessions and Uploaded Files</h1>
+
+<div th:if="${sessions != null and !#lists.isEmpty(sessions)}">
+    <div th:each="sess : ${sessions}">
+        <h2>Session: <b th:text="${sess.sessionCode}"></b></h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Program Name</th>
+                    <th>Session ID</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="file : ${sess.javaFiles}">
+                    <td th:text="${file.filename}"></td>
+                    <td th:text="${sess.sessionCode}"></td>
+                    <td>
+                        <form th:action="@{/deleteSessionAll}" method="post">
+                            <input type="hidden" name="sessionCode" th:value="${sess.sessionCode}" />
+                            <button type="submit"
+                                    onclick="return confirm('Delete this session and all its files?')">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:if="${sessions == null or #lists.isEmpty(sessions)}">
+    <p>No sessions found in the database.</p>
+</div>
+
+</body>
+</html>

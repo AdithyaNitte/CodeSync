@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    
+    <title>Uploaded Files</title>
+    
+    <style>
+        /* Add a style block to set the body background color */
+        body {
+            background-color: rgb(242, 252, 253); /* Light bluish/cyan color */
+        }
+    </style>
+</head>
+
+<body 
+    oncopy="return false" 
+    oncut="return false" 
+    onpaste="return false" 
+    oncontextmenu="return false" 
+    onselectstart="return false"
+    style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"
+>
+
+<h2>Uploaded Files for Session: <b th:text="${sessionCode}"></b></h2>
+
+<table border="1" cellpadding="5">
+    <tr th:each="file : ${files}">
+        <th>Filename</th>
+        <th th:text="${file.filename}"></th>
+    </tr>
+    <tr th:each="file : ${files}">
+        <td>Code</td>
+        <td>
+            <pre 
+                th:text="${file.code}" 
+                style="user-select: none; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none;"
+            ></pre>
+        </td>
+    </tr>
+</table>
+
+</body>
+</html>

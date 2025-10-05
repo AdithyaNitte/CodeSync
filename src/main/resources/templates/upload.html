@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload Single File</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #uploadForm {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 { color: #007bff; text-align: center; margin-bottom: 25px; }
+        p { text-align: center; margin-bottom: 30px; font-size: 1.1em; }
+        p b { color: #28a745; font-size: 1.2em; font-weight: 700; }
+
+        #dropZone {
+            border: 3px dashed #007bff;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #eaf6ff;
+            border-radius: 8px;
+            font-size: 1.1em;
+            color: #007bff;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        #dropZone:hover {
+            border-color: #0056b3;
+            background-color: #dbeaff;
+            box-shadow: 0 0 15px rgba(0,123,255,0.3);
+        }
+
+        #fileName {
+            margin-bottom: 20px;
+            font-size: 1em;
+            color: #555;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            box-shadow: 0 4px 10px rgba(40,167,69,0.3);
+        }
+
+        button[type="submit"]:hover { background-color: #218838; }
+        button[type="submit"]:active { transform: translateY(1px); }
+        button[disabled] {
+            background-color: #ccc !important;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+<h2>Upload Any File</h2>
+<p>Session Code: <b th:text="${sessionCode}"></b></p>
+
+<form id="uploadForm" method="post" enctype="multipart/form-data" th:action="@{/uploadFiles}">
+    <input type="hidden" name="sessionCode" th:value="${sessionCode}" />
+    <div id="dropZone">Drag & Drop your file here or click to select</div>
+    <input type="file" id="fileInput" name="files" style="display:none">
+    <div id="fileName"></div>
+    <button type="submit" id="submitBtn" disabled>Submit</button>
+</form>
+
+<script>
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const fileNameDiv = document.getElementById("fileName");
+const submitBtn = document.getElementById("submitBtn");
+
+// Click to select file
+dropZone.addEventListener("click", () => fileInput.click());
+dropZone.addEventListener("dragover", e => e.preventDefault());
+dropZone.addEventListener("drop", e => {
+    e.preventDefault();
+    if(e.dataTransfer.files.length > 0){
+        fileInput.files = e.dataTransfer.files;
+        showFile(e.dataTransfer.files[0]);
+    }
+});
+
+// Show filename when selected
+fileInput.addEventListener("change", e => {
+    if(e.target.files.length > 0){
+        showFile(e.target.files[0]);
+    }
+});
+
+function showFile(file){
+    fileNameDiv.textContent = "Selected File: " + file.name;
+    submitBtn.disabled = false;
+}
+
+// Reload page on forward/back
+window.addEventListener("pageshow", function(event) {
+    if(event.persisted || (window.performance && window.performance.navigation.type === 2)){
+        window.location.reload();
+    }
+});
+</script>
+</body>
+</html>

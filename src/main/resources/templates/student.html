@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student View</title>
+    <style>
+        /* Global & Body Styling for Background Image and Full Screen */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #e0e0e0;
+            
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            
+            /* Required for anti-copy/select logic */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        /* Glassmorphism Card Container */
+        .login-card {
+            background-color: rgba(255, 255, 255, 0.15); /* Light semi-transparent */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle light border */
+            border-radius: 20px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        /* Header Styling */
+        h2 {
+            font-size: 1.8em;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: white; /* Light color for header text */
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            line-height: 1.4;
+        }
+
+        /* Form Elements */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9); /* Opaque input field */
+            color: #333;
+            font-size: 1.1em;
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+        
+        input[type="text"]::placeholder {
+            color: #777;
+        }
+
+        input[type="text"]:focus {
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+        }
+
+        /* Button Styling (Gradient Look) */
+        button[type="submit"] {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            
+            /* Gradient matching the screenshot's primary button */
+            background: linear-gradient(135deg, #007bff, #6f42c1); 
+            box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.6);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+    </style>
+    
+    <!-- FIX: This is the correct way to reference static assets (like bck.png) using Thymeleaf. -->
+    <style th:inline="css">
+        body {
+            /* This assumes bck.png is now in the /static/ directory */
+            background-image: url([[@{/bck.png}]]);
+        }
+    </style>
+</head>
+<body 
+    oncopy="return false" 
+    oncut="return false" 
+    onpaste="return false" 
+    oncontextmenu="return false" 
+    onselectstart="return false"
+>
+    <!-- Removed redundant content-wrapper div -->
+    <div class="login-card">
+        <h2>Enter Session Code to View Files</h2>
+        <form th:action="@{/student/view}" method="post">
+            <input type="text" name="sessionCode" placeholder="Enter the session code here" required>
+            <button type="submit">View Files</button>
+        </form>
+    </div>
+</body>
+</html>
